@@ -1,4 +1,7 @@
+from django.contrib.auth.models import User
 from django.db import models
+
+from django.core.validators import MinValueValidator, MaxValueValidator
 
 class Book(models.Model):
     title = models.CharField(max_length=200)
@@ -24,7 +27,7 @@ class Author(models.Model):
 
 class BookAuthor(models.Model):
     book = models.ForeignKey(Book, on_delete=models.CASCADE)
-    author = models.ForeignKey(Book, on_delete=models.CASCADE)
+    author = models.ForeignKey(Author, on_delete=models.CASCADE)
 
 
     def __str__(self):
@@ -34,7 +37,9 @@ class BookReview(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     book = models.ForeignKey(Book, on_delete=models.CASCADE) 
     commit = models.TextField()
-    stars_given = models.ImageField()
+    stars_given = models.ImageField(
+        validators = [MinValueValidator(1), MaxValueValidator(5)]
+    )
 
     def __str__(self):
         return f"{self.stars_given} star for {self.book.title} by {self.user.username}"  
