@@ -50,4 +50,23 @@ class RegistrationTestCase(TestCase):
         user_count = User.objects.count()
         self.assertEqual(user_count, 0)
         self.assertFormError(response, 'form', 'email', 'Enter a valid email address.')
+
+    def test_unique_username(self):
+         user =User.objects.create_user(username='Vohidjon')
+         user.set_password('12345')
+         user.save()
+         response = self.client.post(
+              reverse("users:register"),
+              data={
+                   "username": 'Vohidjon',
+                   "first_name": 'Vohidjon',
+                   "last_name": 'Azimqulov',
+                   "email": 'admin@mail.ru',
+                   "password": '12345'
+              }
+         )
+         user_count = User.objects.count()
+         self.assertEqual(user_count, 1)
+         self.assertFormError(response, 'form', 'username', 'A user with that username already exists.')
+
                

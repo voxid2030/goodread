@@ -36,4 +36,8 @@ class UserCreateForm(forms.ModelForm):
         user = super().save(commit)
         user.set_password(self.cleaned_data['password'])
         user.save()
-        return user        
+        return user  
+
+class UserLoginForm(forms.Form):
+    username = forms.CharField(max_length=150)
+    password = forms.CharField(max_length=128)           
